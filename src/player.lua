@@ -68,14 +68,14 @@ end
 M.hitBoundaries = function()
 	local x, y, w, h = love.window.getSafeArea()
 
-	if player.head.x < x then
-		player.head.x = w
+	if player.head.x < x - TILE_SIZE then
+		player.head.x = w - TILE_SIZE
 	elseif player.head.x > w then
-		player.head.x = x
-	elseif player.head.y < y then
-		player.head.y = h
+		player.head.x = x - TILE_SIZE
+	elseif player.head.y < y - TILE_SIZE then
+		player.head.y = h - TILE_SIZE
 	elseif player.head.y > h then
-		player.head.y = y
+		player.head.y = y - TILE_SIZE
 	end
 end
 

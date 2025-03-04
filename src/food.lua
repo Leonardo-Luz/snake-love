@@ -12,8 +12,8 @@ M.spawn = function()
 
 	::continue::
 
-	local x = math.ceil(math.random(w))
-	local y = math.ceil(math.random(h))
+	local x = math.ceil(math.random(w) - 20)
+	local y = math.ceil(math.random(h) - 20)
 
 	new = {
 		x = x - x % 20,
