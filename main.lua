@@ -3,8 +3,6 @@ local food = require("src.food")
 
 TILE_SIZE = 20
 
-local gameSpeed = 8
-
 function love.load()
 	math.randomseed(os.time())
 end
@@ -13,6 +11,8 @@ local loop = 0
 local spawn = 0
 
 function love.update(dt)
+	::continue::
+
 	loop = loop + 1
 
 	local direc = player.getDirec()
@@ -39,12 +39,20 @@ function love.update(dt)
 		speedDown = true
 	end
 
-	if loop >= gameSpeed then
-		if speedUp and gameSpeed > 2 then
-			gameSpeed = gameSpeed - 1
+	if loop >= player.getSpeed() then
+		loop = 0
+
+		player.setDirec(direc)
+
+		if player.getDirec() == 0 then
+			goto continue
+		end
+
+		if speedUp then
+			player.setSpeed(player.getSpeed() - 1)
 		end
 		if speedDown then
-			gameSpeed = gameSpeed + 1
+			player.setSpeed(player.getSpeed() + 1)
 		end
 
 		spawn = spawn + 1
@@ -58,13 +66,11 @@ function love.update(dt)
 			spawn = 0
 		end
 
-		player.setDirec(direc)
 		player.move()
 		player.autoHit()
 		player.hitBoundaries()
 
 		food.consume()
-		loop = 0
 	end
 end
 

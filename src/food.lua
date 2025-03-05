@@ -12,12 +12,12 @@ M.spawn = function()
 
 	::continue::
 
-	local x = math.ceil(math.random(w) - 20)
-	local y = math.ceil(math.random(h) - 20)
+	local x = math.ceil(math.random(w) - TILE_SIZE)
+	local y = math.ceil(math.random(h) - TILE_SIZE)
 
 	new = {
-		x = x - x % 20,
-		y = y - y % 20,
+		x = x - x % TILE_SIZE,
+		y = y - y % TILE_SIZE,
 	}
 
 	for _, food in pairs(foods) do
@@ -42,7 +42,7 @@ end
 M.consume = function()
 	for _, pos in pairs(M.getFoods()) do
 		if player.getHead().x == pos.x and player.getHead().y == pos.y then
-			player.increase()
+			player.increaseBody()
 			M.remove(pos.x, pos.y)
 		end
 	end

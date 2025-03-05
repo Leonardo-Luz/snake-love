@@ -1,4 +1,4 @@
-local INCREASE_RATE = 1
+local SCORE_INCREASE_RATE = 100
 
 PAUSED = 0
 UP = 1
@@ -8,6 +8,8 @@ LEFT = 4
 
 local player = {
 	direc = PAUSED,
+	score = 0,
+	speed = 8,
 	head = {
 		x = 0,
 		y = 0,
@@ -16,6 +18,18 @@ local player = {
 }
 
 local M = {}
+
+M.getSpeed = function()
+	return player.speed
+end
+
+M.setSpeed = function(speed)
+	if speed < 2 or speed > 10 then
+		return
+	end
+
+	player.speed = speed
+end
 
 M.getBody = function()
 	return player.body
@@ -47,13 +61,31 @@ M.setPos = function(tile, x, y)
 	tile.y = y
 end
 
-M.increase = function()
+M.getScore = function()
+	return player.score
+end
+
+M.setScore = function(score)
+	player.score = score
+end
+
+M.increaseScore = function()
+	player.score = player.score + SCORE_INCREASE_RATE
+
+	if player.score % 1000 == 0 then
+		M.setSpeed(player.speed - 0.5)
+	end
+end
+
+M.increaseBody = function()
 	local new = {
 		x = player.head.x,
 		y = player.head.y,
 	}
 
 	table.insert(player.body, new)
+
+	M.increaseScore()
 end
 
 M.autoHit = function()
@@ -118,6 +150,18 @@ M.draw = function()
 		love.graphics.setColor(0, 0.8, 0.8)
 		love.graphics.rectangle("fill", part.x + TILE_SIZE, part.y + TILE_SIZE, TILE_SIZE, TILE_SIZE)
 	end
+
+	local _, _, w, _ = love.window.getSafeArea()
+
+	local speed_percent = (2 * 100) / M.getSpeed()
+
+	local score = string.format(" Score: %.2f", M.getScore())
+	local speed = string.format("Speed: %.2f%%", speed_percent)
+
+	local padding = (" "):rep((w - (score:len() + speed:len())) / 5)
+	local hud = score .. padding .. speed
+
+	love.graphics.print(hud, 0, 0)
 end
 
 return M
